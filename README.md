@@ -25,6 +25,10 @@ job-priority, ipp-attribute-fidelity, confidential, page-ranges, job-hold-until,
 
 - Thus, there was no change required to be made to the dialog, all the options will be retrieved from cups via CUPS API using the existing function.
 
+## Minor Changes
+
+- Added "libtool" as dependency to cpdb-libs in README.
+
 ## Repositories
 
 - [CUPS Backend](https://github.com/ayush268/cpdb-backend-cups)
