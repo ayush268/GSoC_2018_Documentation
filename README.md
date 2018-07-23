@@ -37,6 +37,14 @@ Current print dialogs have a functionality to print to a (PDF, and other on user
 
 - This file path must be sent as an option to the backend (via dbus) which in turn will use this option to actually print and save file in the specified format (provided via file path).
 
+### Steps
+
+- Added the **final file path** to the cpdb-libs Backend Interface which will be required for the file backend.
+
+- Made the corresponding changes to the method **print-file** on cups and gcp backend.
+
+- Working on file backend which will use the **final file path** to actually save/print the file.
+
 
 ## Third Task -> GTK3 Adaptor backend
 
@@ -59,6 +67,7 @@ The final goal then is to install the GTK3 print dialog with only this backend a
 
 - Added "libtool" as dependency to cpdb-libs in README.
 
+- Removed unnecessary cups library from cpdb-backend-gcp.
 
 ## Repositories
 
