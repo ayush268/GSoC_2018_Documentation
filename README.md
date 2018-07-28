@@ -43,8 +43,9 @@ Current print dialogs have a functionality to print to a (PDF, and other on user
 
 - Made the corresponding changes to the method **print-file** on cups and gcp backend.
 
-- Working on file backend which will use the **final file path** to actually save/print the file.
+- The file backend is complete and it contains the printer **Save As PDF**.
 
+- The demo can be done by compiling and running the demo/print_frontend after installing the **cpdb-backend-file** in **cpdb-libs**.
 
 ## Third Task -> GTK3 Adaptor backend
 
@@ -73,5 +74,5 @@ The final goal then is to install the GTK3 print dialog with only this backend a
 
 - [CUPS Backend](https://github.com/ayush268/cpdb-backend-cups)
 - [GCP Backend](https://github.com/ayush268/cpdb-backend-gcp)
-- [PDF Backend](https://github.com/ayush268/cpdb-backend-file)
+- [FILE Backend](https://github.com/ayush268/cpdb-backend-file)
 - [CPDB Library](https://github.com/ayush268/cpdb-libs)
