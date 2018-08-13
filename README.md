@@ -2,6 +2,8 @@
 
 My name is Ayush Bansal and I was involved in GSoC'18 with **OpenPrinting** under the **Linux Foundation** working on the backend of **C**ommon **P**rint **D**ialog.
 
+https://summerofcode.withgoogle.com/projects/#6644902721486848
+
 ## About the Project
 
 Printing out of desktop applications is managed by many *very* different dialogs. Most of these applications have different kind of printing options and it becomes confusing for the users, having to do the printing operation in many different ways. In some cases, many dialogs are *missing important features* of certain printing queues.
@@ -23,13 +25,13 @@ This summer I was one of the people working on the common print dialog project a
 
 ### Adding CUPS general options to the CUPS Backend.
 
-The CUPS backend informed the print dialog only about printer-specific user-settable options, not about general options implemented in CUPS or cups-filters. Options like number-up, reverse order etc were only specific to CUPS printing technology and they might or might not be available int other printing technologies.
-So, my task here was to ensure that CUPS backend reported all the options i.r. including general options.
+The CUPS backend informed the print dialog only about printer-specific user-settable options, not about general options implemented in CUPS or cups-filters. Options like number-up, reverse order etc were only specific to CUPS printing technology and they might or might not be available in other printing technologies.
+So, my task here was to ensure that CUPS backend reported all the options i.e. including general options.
 
 ### Coding a new backend for printing to a file.
 
 Every print dialog has a functionality of printing to (PDF) file, so the common print dialog should also have a backend for printing to a file.
-So, I had to work on developing a backend which will print a file into a final path provided by the user.
+So, I had to work on developing a backend which will print a file into the destination path provided by the user.
 
 ### Coding an Adaptor backend for gtk3 which will communicate to common print dialog.
 
