@@ -28,6 +28,8 @@ This summer I was one of the people working on the common print dialog project a
 The CUPS backend informed the print dialog only about printer-specific user-settable options, not about general options implemented in CUPS or cups-filters. Options like number-up, reverse order etc were only specific to CUPS printing technology and they might or might not be available in other printing technologies.
 So, my task here was to ensure that CUPS backend reported all the options i.e. including general options.
 
+After going through CUPS code, programming manual and CUPS book by Michael Sweet, I couldn't find the API function which would be able to solve the problem, so I added an [Issue](https://github.com/apple/cups/issues/5340) in [apple/cups](https://github.com/apple/cups) repository and the problem was resolved without adding any new code to the CPDB CUPS Backend.
+
 ### Coding a new backend for printing to a file.
 
 Every print dialog has a functionality of printing to (PDF) file, so the common print dialog should also have a backend for printing to a file.
@@ -54,10 +56,6 @@ GTK3 dialog <-> GTK3 CPD backend <-> CPD dialog (frontend) <-> the CPD backends
 - [Fix of Modified CPDB-Library in CUPS Backend](https://github.com/ayush268/cpdb-backend-cups/commit/2ec937379e16fee76bec06339b0fc76680638065)
 - [Bug Fixes in GCP Backend](https://github.com/ayush268/cpdb-backend-gcp/commits?author=ayush268)
 
-### Issues Created
-
-- Went through CUPS Code/Programming Manual for the first task and opened [this issue](https://github.com/apple/cups/issues/5340).
-
 ## Targets Left
 
 The CPDB-Libraries and the newly written backend works fine but the list of targets left are the following:
@@ -70,7 +68,7 @@ The CPDB-Libraries and the newly written backend works fine but the list of targ
 
 I am thankful to my mentors Till and Aveek for their guidance throughout the project. Interacting with them and working on this project together made this a great learning experience for me and I gained a lot of knowledge into the working of printing systems.
 
-I would also like to thank Nilanjana and Yash, the previous developers in the project, who helped whenever with my questions.
+I would also like to thank Nilanjana and Yash, the previous developers in the project, who helped me whenever I had questions.
 It was a great experience and fun working with you all.
 
 ## Conclusion
