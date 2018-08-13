@@ -1,78 +1,76 @@
-# Documentation for work done (taskwise)
+# My GSoC Project
 
-## First Task -> CUPS general options
+My name is Ayush Bansal and I was involved in GSoC'18 with **OpenPrinting** under the **Linux Foundation** working on the backend of **C**ommon **P**rint **D**ialog.
 
-The CUPS backend tells the print dialog only about printer-specific user-settable options, not about general options implemented in CUPS or cups-filters and so being available for all print queues. These are options like N-up, reverse order, selected pages, As they are only common for CUPS and not necessarily available with other print technologies like Google Cloud Print, they should get reported to the print dialog by the CUPS backend.
+## About the Project
 
-### Steps 
+Printing out of desktop applications is managed by many *very* different dialogs. Most of these applications have different kind of printing options and it becomes confusing for the users, having to do the printing operation in many different ways. In some cases, many dialogs are *missing important features* of certain printing queues.
 
-- Went through the CUPS API documentation and programming manual but the only way to get cups printer options was to retrieve it using the function __cupsFindDestSupported__ with option_name __job-creation-attributes__.
+### Solution
 
-- The info mentioned in above point can be found [here](https://www.cups.org/doc/cupspm.html#detailed-destination-information).
+The Common Print Dialog project provides a *uniform printing experience* on Linux Desktop Environments. It aims to provide a GUI toolkit which is of independent and modular design, thus different desktop environments will have print dialogs with the same functionality, as the printing backends will be specific to a technologies and thus same across different environments.
 
-- Earlier the above function used to return the following options:
+### Design
 
-```
-job-priority, ipp-attribute-fidelity, confidential, page-ranges, job-hold-until, print-quality, media, multiple-document-handling, finishings, copies, job-name, output-bin, print-color-mode, orientation-requested, printer-resolution, sides, media-col, number-up
-```
+- The idea behind the design was to have a **server-client** architecture where different printing technologies like CUPS, Google Cloud Print, etc. behaved as servers (backend) and the dialogs behaved like clients (frontend).
+- So, the print dialog gets the information from the print backends, there will be a printing queue corresponding to each backend.
+- For communication between the frontend and the backend, we are using **dbus** which acts as message bus between the server and clients and offers features like broadcasting *signals* and abstracting away server endpoints as simple function calls.
+- The user sees the frontend and all the relevant options relating to a certain printing queue is fetched from the relevant backend, and once the user sends a printing job, the data along with printing settings are sent to backends via dbus.
 
--  I was having doubt that if there exists Isome other API function I can use to get few remaining attributes, so I opened up issue on the main CUPS repository, link to which is the following topic:
+## My tasks
 
-      [Question: Regarding cups API functions for cups standard/common options.](https://github.com/apple/cups/issues/5340)
+This summer I was one of the people working on the common print dialog project and my work was divided mainly amongst 3 tasks:
 
-- After discussion on this issue, the things were more clearer and I discussed the same with Till (my mentor).
+### Adding CUPS general options to the CUPS Backend.
 
-- The final conclusion was that some of the options are to be PPD specific but the options which are not and were not being retrieved are added to the CUPS repo and thus they will be retrieved now by making the same call as mentioned in first point.
+The CUPS backend informed the print dialog only about printer-specific user-settable options, not about general options implemented in CUPS or cups-filters. Options like number-up, reverse order etc were only specific to CUPS printing technology and they might or might not be available int other printing technologies.
+So, my task here was to ensure that CUPS backend reported all the options i.r. including general options.
 
-- Thus, there was no change required to be made to the dialog, all the options will be retrieved from cups via CUPS API using the existing function.
+### Coding a new backend for printing to a file.
 
+Every print dialog has a functionality of printing to (PDF) file, so the common print dialog should also have a backend for printing to a file.
+So, I had to work on developing a backend which will print a file into a final path provided by the user.
 
-## Second Task -> Print into a (PDF) file
+### Coding an Adaptor backend for gtk3 which will communicate to common print dialog.
 
-Current print dialogs have a functionality to print to a (PDF, and other on user's choice) file, usually one selects this by some entry in the list of print queues. To avoid that every GUI project has to re-invent the wheel by developing and maintaining this individually and also to easily get new ideas on this into all print dialogs at once.
-
-### Discussion
-
-- The frontend must open a **Save As** dialog which will be used to get the **destination file path** from the user to finally save the printed file.
-
-- This file path must be sent as an option to the backend (via dbus) which in turn will use this option to actually print and save file in the specified format (provided via file path).
-
-### Steps
-
-- Added the **final file path** to the cpdb-libs Backend Interface which will be required for the file backend.
-
-- Made the corresponding changes to the method **print-file** on cups and gcp backend.
-
-- The file backend is complete and it contains the printer **Save As PDF**.
-
-- The demo can be done by compiling and running the demo/print_frontend after installing the **cpdb-backend-file** in **cpdb-libs**.
-
-## Third Task -> GTK3 Adaptor backend
-
-The GTK3 dialog (frontend) will communicate to this backend which will further the request to the other backends like CUPS, GCP etc.
+After completing the above tasks, we have CUPS, GCP, FILE backends completely functional and they can be used to fetch queues, send print jobs etc.
+My final task was to provide support for the new Common Print Dialog Backends in the current GTK3 dialog and since this dialog has its own backend concept, I had to add an *adaptor* backend.
 
 ```
-GTK3 dialog  <-> GTK3 dialog backend <-> the CPDB backends
+GTK3 dialog <-> GTK3 CPD backend <-> CPD dialog (frontend) <-> the CPD backends
 ```
 
-The final goal then is to install the GTK3 print dialog with only this backend and without its original backends. This dialog should now give support for CUPS print queues, Google Cloud Print printers and file backend.
+## Work Done
 
-### Steps
+- [CPDB-Backend-FILE](https://github.com/ayush268/cpdb-backend-file): The backend which I developed for printing to a file.
+- [CPDB-GTK3-Adaptor-Backend](https://github.com/ayush268/cpdb-gtk3-adaptor-backend): The backend which I am developing for support of CPD in GTK3 dialog.
 
-- Going through the [Gtk Printing guide](https://developer.gnome.org/gtk3/stable/Printing.html) and played around with a few things, also [Gtk Printing here](https://www.gnu.org/software/guile-gnome/docs/gtk/html/index.html)
+### Minor Fixes
 
-- Wrote some C code using Gtk Printing to get an idea how it works (uploaded on GTK3 Adaptor Backend repo).
+- [Modified CPDB-Library DBUS API to support new file backend](https://github.com/ayush268/cpdb-libs/commit/b90c188545dc0e98e5ff3aef988c51ec1390ca03).
+- [Bug Fixes in CPDB-Libraries](https://github.com/ayush268/cpdb-libs/commits?author=ayush268)
+- [Fix of Modified CPDB-Library in CUPS Backend](https://github.com/ayush268/cpdb-backend-cups/commit/2ec937379e16fee76bec06339b0fc76680638065)
+- [Bug Fixes in GCP Backend](https://github.com/ayush268/cpdb-backend-gcp/commits?author=ayush268)
 
+### Issues Created
 
-## Minor Changes
+- Went through CUPS Code/Programming Manual for the first task and opened [this issue](https://github.com/apple/cups/issues/5340).
 
-- Added "libtool" as dependency to cpdb-libs in README.
+## Targets Left
 
-- Removed unnecessary cups library from cpdb-backend-gcp.
+The CPDB-Libraries and the newly written backend works fine but the list of targets left are the following:
 
-## Repositories
+- The GTK3 Adaptor backend is not fully complete upto a functional state.
+- The CPDB-Libraries and backends need to be modified to either call a callback function or emit a signal denoting - they have discovered all the printers.
+- Merging the code currently in my repos into the OpenPrinting repositories.
 
-- [CUPS Backend](https://github.com/ayush268/cpdb-backend-cups)
-- [GCP Backend](https://github.com/ayush268/cpdb-backend-gcp)
-- [FILE Backend](https://github.com/ayush268/cpdb-backend-file)
-- [CPDB Library](https://github.com/ayush268/cpdb-libs)
+## Acknowledgements
+
+I am thankful to my mentors Till and Aveek for their guidance throughout the project. Interacting with them and working on this project together made this a great learning experience for me and I gained a lot of knowledge into the working of printing systems.
+
+I would also like to thank Nilanjana and Yash, the previous developers in the project, who helped whenever with my questions.
+It was a great experience and fun working with you all.
+
+## Conclusion
+
+Google Summer of Code was an awesome learning experience for and I gained a lot of knowledge by working on this project.
